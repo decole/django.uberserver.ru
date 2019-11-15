@@ -103,3 +103,6 @@ venv.bak/
 # mypy
 .mypy_cache/
 .idea/
+.sync_4ef1fe5b6c28.db
+.sync_4ef1fe5b6c28.db-wal
+Desktop.ini
