@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Articles for {{ type_object }}{% endblock %}
+
+{% block content %}
+    <h1>Articles for Sensor</h1>
+    <p>id: {{ sensor.id }}</p>
+    <p>name: {{ sensor.name }}</p>
+    <p>topic: {{ sensor.topic }}</p>
+    <p>condition_min: {{ sensor.condition_min }}</p>
+    <p>condition_max: {{ sensor.condition_max }}</p>
+    <p>link: {{ sensor.link }}</p>
+    <p>link_id: {{ sensor.link_id }}</p>
+    <a href="/sensors/">up</a>
+{% endblock %}

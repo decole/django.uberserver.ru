@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}Articles for {{ type_object }}{% endblock %}
+
+{% block content %}
+<h1>Articles for Sensors</h1>
+
+{% for swift in swift_list %}
+    <p><a href="/swift/{{ swift.id }}">имя:{{ swift.name }} | топик:{{ swift.topic }}</a></p>
+{% endfor %}
+    <a href="/">home</a>
+{% endblock %}
