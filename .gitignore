@@ -108,3 +108,4 @@ Desktop.ini
 .sync_4ef1fe5b6c28.db
 .sync_4ef1fe5b6c28.db-wal
 *.db-shm
+uberserver/migrations/
