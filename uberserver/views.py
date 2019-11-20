@@ -7,11 +7,8 @@ from uberserver.models import Sensor, Swift
 
 
 def index(request):
-    return HttpResponse("""Hello, world. You're at the polls index <br> 
-    <a href='/admin/'>/admin/</a> <br>
-    <a href='/sensors/'>/sensors/</a> <br>
-    <a href='/swifts/'>/swifts/</a> <br>
-    """)
+    model = {'title': 'Sensors', 'type_object': 'Index'}
+    return render(request, 'pages/main_pages/index.html', model)
 
 
 def sensors(request):
