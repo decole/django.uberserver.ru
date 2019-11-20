@@ -33,3 +33,6 @@ def swift(request, id_swift):
     swift_one = Swift.objects.get(id=id_swift).get_swift_data()
     model = {'title': 'Swift', 'type_object': 'swift', 'swift': swift_one}
     return render(request, 'pages/swifts/swift.html', model)
+
+def mqttProcessor(request):
+    pass
