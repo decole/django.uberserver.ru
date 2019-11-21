@@ -1,8 +1,4 @@
 from django.shortcuts import render
-
-# Create your views here.
-from django.http import HttpResponse
-
 from uberserver.models import Sensor, Swift
 
 
@@ -33,6 +29,7 @@ def swift(request, id_swift):
     swift_one = Swift.objects.get(id=id_swift).get_swift_data()
     model = {'title': 'Swift', 'type_object': 'swift', 'swift': swift_one}
     return render(request, 'pages/swifts/swift.html', model)
+
 
 def mqttProcessor(request):
     pass
