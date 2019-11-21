@@ -1,14 +1,8 @@
 # manage.py mqtt - starting command
+# pip install paho-mqtt
 from django.core.management.base import BaseCommand, CommandError
-
-
+from uberserver.helpers.mqtt_helper import on_message_print
 import paho.mqtt.subscribe as subscribe
-
-
-# from uberserver.helpers.mqttHelper import on_message_print
-def on_message_print(client, userdata, message):
-    print("%s %s" % (message.topic, message.payload))
-
 
 
 class Command(BaseCommand):
@@ -16,4 +10,4 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         self.stdout.write(self.style.SUCCESS('Mqtt client is starting'))
-        subscribe.callback(on_message_print, "#", hostname="192.168.1.5", port=1883)
+        subscribe.callback(on_message_print, "#", hostname="uberserver.ru", port=2223)
