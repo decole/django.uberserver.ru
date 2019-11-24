@@ -4,7 +4,7 @@
 
 {% block content %}
 <h1>Articles for Sensors</h1>
-
+{% include "pages/snippets/snipet_sensor.html" %}
 {% for swift in swift_list %}
     <p><a href="/swift/{{ swift.id }}">имя:{{ swift.name }} | топик:{{ swift.topic }}</a></p>
 {% endfor %}

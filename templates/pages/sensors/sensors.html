@@ -6,6 +6,7 @@
 <h1>Articles for Sensors</h1>
 
 {% for sensor in sensor_list %}
+    {% include "pages/snippets/snipet_sensor.html" %}
     <p><a href="/sensor/{{ sensor.id }}">имя:{{ sensor.name }} | топик:{{ sensor.topic }}</a></p>
 {% endfor %}
     <a href="/">home</a>

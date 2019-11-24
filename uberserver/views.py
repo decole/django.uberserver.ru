@@ -1,5 +1,4 @@
 import json
-import logging
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
@@ -23,16 +22,16 @@ def swifts(request):
     return render(request, 'pages/swifts/swifts.html', model)
 
 
-def sensor(request, id_sensor):
-    sensor_one = Sensor.objects.get(id=id_sensor).get_sensor_data()
-    model = {'title': 'Sensor', 'type_object': 'sensor', 'sensor': sensor_one}
-    return render(request, 'pages/sensors/sensor.html', model)
+# def sensor(request, id_sensor):
+#     sensor_one = Sensor.objects.get(id=id_sensor).get_sensor_data()
+#     model = {'title': 'Sensor', 'type_object': 'sensor', 'sensor': sensor_one}
+#     return render(request, 'pages/sensors/sensor.html', model)
 
 
-def swift(request, id_swift):
-    swift_one = Swift.objects.get(id=id_swift).get_swift_data()
-    model = {'title': 'Swift', 'type_object': 'swift', 'swift': swift_one}
-    return render(request, 'pages/swifts/swift.html', model)
+# def swift(request, id_swift):
+#     swift_one = Swift.objects.get(id=id_swift).get_swift_data()
+#     model = {'title': 'Swift', 'type_object': 'swift', 'swift': swift_one}
+#     return render(request, 'pages/swifts/swift.html', model)
 
 
 @csrf_exempt
