@@ -8,4 +8,5 @@ urlpatterns = [
     path('sensor/<int:id_sensor>', views.sensor, name='sensor'),
     path('swifts/', views.swifts, name='swifts'),
     path('swift/<int:id_swift>', views.swift, name='swift'),
+    path('api/mqtt', views.mqttApi),
 ]

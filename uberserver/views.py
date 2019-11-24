@@ -1,5 +1,9 @@
+import json
+import logging
+from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
-from uberserver.models import Sensor, Swift
+from uberserver.models import Sensor, Swift, MqttPayload
 
 
 def index(request):
@@ -31,5 +35,14 @@ def swift(request, id_swift):
     return render(request, 'pages/swifts/swift.html', model)
 
 
-def mqttProcessor(request):
-    pass
+@csrf_exempt
+def mqttApi(request):
+    if request.method == 'GET':
+        return HttpResponse(json.dumps([{"response": "ok"}, {"method": "GET"}]), content_type="application/json")
+    elif request.method == 'POST':
+        res = json.loads(request.body.decode())
+        payload = MqttPayload()
+        payload.topic = res['topic']
+        payload.payload = res['payload']
+        payload.save()
+        return HttpResponse(json.dumps([{"response": "ok"}, {"method": "POST"}]), content_type="application/json")

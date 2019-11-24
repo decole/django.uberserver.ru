@@ -104,3 +104,11 @@ class Swift(models.Model):
 
     def get_absolute_url(self):
         return reverse('swift_detail', args=[str(self.id)])
+
+
+class MqttPayload(models.Model):
+    topic = models.CharField(max_length=200, null=False)
+    payload = models.CharField(max_length=400, null=False)
+
+    def __str__(self):
+        return self.topyc
