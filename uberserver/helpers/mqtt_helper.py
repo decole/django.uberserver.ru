@@ -1,19 +1,16 @@
-from django.core.cache import cache
+# Хелпер для работы с mqtt протоколом и датчиками
+#
+# проверить нет ли в cache параметров и топиков
+# если нет параметров грузим с БД параметры, так же если давно не присылались сообщения с микросервиса
+# тоже грузимся с БД,
+# если есть параметры и топики приходят известные, то проверяем топики по присланным данным
+# если приходят топики которых нет, записать их в кэш параметр который потом будет использоваться для проверок
+#
+# проверка на аварийность данных
+# проверка на доступность контроллеров
+# проверка на незарегистрированные топики
+# функция отправки команд микроконтроллерам
 
 
-# functional mqtt-client
-def on_message_print(client, userdata, message):
-    # print("%s %s" % (message.topic, message.payload))
-    processor(message)
-
-
-def processor(message):
-    # print("processor - %s %s" % (message.topic, message.payload))
-    print(str(message.payload.decode("utf-8")))
-
-    # cache.set('underground/temperature', str(message.payload), 30)
-    # Можно использовать кэш
-    # var = cache.get('underground/temperature')
-    # print(var)
-    # в кэше храним дату последнего обноаления конфига, если оперделенное время не обновлялось то обновляем и в кэш
-    # записываем новое время
+def analise(arrObject):
+    pass

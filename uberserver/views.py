@@ -2,6 +2,8 @@ import json
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
+
+from uberserver.helpers.mqtt_helper import analise
 from uberserver.models import Sensor, Swift, MqttPayload
 
 
@@ -40,6 +42,7 @@ def mqttApi(request):
         return HttpResponse(json.dumps([{"response": "ok"}, {"method": "GET"}]), content_type="application/json")
     elif request.method == 'POST':
         res = json.loads(request.body.decode())
+        analise(res)  # функция анализатора
         payload = MqttPayload()
         payload.topic = res['topic']
         payload.payload = res['payload']
