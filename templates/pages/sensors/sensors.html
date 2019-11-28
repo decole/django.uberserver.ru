@@ -3,11 +3,14 @@
 {% block title %}Articles for {{ type_object }}{% endblock %}
 
 {% block content %}
-<h1>Articles for Sensors</h1>
+<h1>Sensors</h1>
+<div class="row">
 
 {% for sensor in sensor_list %}
-    {% include "pages/snippets/snipet_sensor.html" %}
-    <p><a href="/sensor/{{ sensor.id }}">имя:{{ sensor.name }} | топик:{{ sensor.topic }}</a></p>
+    {% with sensor_topic=sensor.topic sensor_name=sensor.name sensor_id=sensor.id %}
+        {% include "pages/snippets/snipet_sensor.html" %}
+    {% endwith %}
 {% endfor %}
-    <a href="/">home</a>
 {% endblock %}
+
+</div>

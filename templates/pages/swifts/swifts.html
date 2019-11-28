@@ -3,10 +3,15 @@
 {% block title %}Articles for {{ type_object }}{% endblock %}
 
 {% block content %}
-<h1>Articles for Sensors</h1>
-{% include "pages/snippets/snipet_sensor.html" %}
+<h1>Swifts</h1>
+<div class="row">
+
 {% for swift in swift_list %}
-    <p><a href="/swift/{{ swift.id }}">имя:{{ swift.name }} | топик:{{ swift.topic }}</a></p>
+    {% with swift_topic=swift.topic swift_name=swift.name swift_id=swift.id %}
+        {% include "pages/snippets/snipet_swift.html" %}
+    {% endwith %}
+{#    <p><a href="/swift/{{ swift.id }}">имя:{{ swift.name }} | топик:{{ swift.topic }}</a></p>#}
 {% endfor %}
-    <a href="/">home</a>
 {% endblock %}
+
+</div>
