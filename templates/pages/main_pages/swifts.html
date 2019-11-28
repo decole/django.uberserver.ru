@@ -15,3 +15,8 @@
 {% endblock %}
 
 </div>
+
+{% block inject-javascript %}
+    {% load static %}
+    <script src="{% static "uberserver/js/swifts.js" %}"></script>
+{% endblock %}

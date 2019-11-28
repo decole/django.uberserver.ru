@@ -15,13 +15,13 @@ def index(request):
 def sensors(request):
     sensor_list = Sensor.objects.all()
     model = {'title': 'Sensors', 'type_object': 'sensor', 'sensor_list': sensor_list}
-    return render(request, 'pages/sensors/sensors.html', model)
+    return render(request, 'pages/main_pages/sensors.html', model)
 
 
 def swifts(request):
     swift_list = Swift.objects.all()
     model = {'title': 'Swifts', 'type_object': 'swift', 'swift_list': swift_list}
-    return render(request, 'pages/swifts/swifts.html', model)
+    return render(request, 'pages/main_pages/swifts.html', model)
 
 
 # def sensor(request, id_sensor):

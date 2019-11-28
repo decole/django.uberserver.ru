@@ -14,3 +14,8 @@
 {% endblock %}
 
 </div>
+
+{% block inject-javascript %}
+    {% load static %}
+    <script src="{% static "uberserver/js/sensors.js" %}"></script>
+{% endblock %}
