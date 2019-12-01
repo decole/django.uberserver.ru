@@ -1,5 +1,10 @@
 from django.db import models
 from django.urls import reverse
+from django.utils import timezone
+
+
+def default_time():
+    return timezone.now()
 
 
 class Link(models.Model):
@@ -109,6 +114,7 @@ class Swift(models.Model):
 class MqttPayload(models.Model):
     topic = models.CharField(max_length=200, null=False)
     payload = models.CharField(max_length=400, null=False)
+    datetime = models.DateTimeField(default=default_time)
 
     def __str__(self):
-        return self.topyc
+        return self.topic

@@ -43,8 +43,10 @@ def mqttApi(request):
     elif request.method == 'POST':
         res = json.loads(request.body.decode())
         analise(res)  # функция анализатора
+        '''
         payload = MqttPayload()
         payload.topic = res['topic']
         payload.payload = res['payload']
         payload.save()
+        '''
         return HttpResponse(json.dumps([{"response": "ok"}, {"method": "POST"}]), content_type="application/json")
