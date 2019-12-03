@@ -24,6 +24,8 @@ class MicroMQTTClass(mqtt.Client):
         ar = requests.post(url, data=json.dumps(data), headers=headers)
         # print(json.dumps(data))
         # print(ar)
+        #  Todo остановить цикл если не приходит код 200 ответ от сайта и кинуть в телегу сообщение о невозможности
+        #   отправки
 
     def on_publish(self, mqttc, obj, mid):
         print("publishing: "+str(mid))
