@@ -12,6 +12,7 @@
 # функция отправки команд микроконтроллерам
 from datetime import datetime
 from django.core.cache import cache
+from uberserver_django.settings import env
 from uberserver.models import Sensor, Swift, MqttPayload
 
 
@@ -66,14 +67,10 @@ def save_to_db(obj, res):
     now = round(datetime.today().timestamp())
     date = round(datetime.today().timestamp())
     cache_topic = cache.get('cache_'+obj['topic'])
-    # print('cache_'+obj['topic'])
-    # print('cache - ' + str(cache_topic))
-    # print('now   - ' + str(now - 1800))
-    # print((now - 1800) > cache_topic)
     if not cache_topic:
         cache.set('cache_'+obj['topic'], date, 3600)
         cache_topic = date
-    if (now - 180) > cache_topic:  # 1800 = 30 minute
+    if (now - int(env('SAVE_ON_SECONDS'))) > cache_topic:
         cache.set('cache_' + obj['topic'], date, 3600)
         save_message_payload(res)
 

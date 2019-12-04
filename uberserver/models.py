@@ -93,6 +93,7 @@ class Swift(models.Model):
     format_swift = models.ForeignKey(Format, on_delete=models.CASCADE, help_text='Формат')
     type = models.ForeignKey(Type, on_delete=models.CASCADE, help_text='Тип')
     link = models.ForeignKey(Link, on_delete=models.CASCADE, help_text='Ссылка на объект')
+    state = models.IntegerField(help_text='Состояние переключателя', default=0)
 
     def __str__(self):
         # str_format = 'влажность в пристройке - {value} %'
