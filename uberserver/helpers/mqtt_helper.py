@@ -98,11 +98,13 @@ def change_state(res):
 def check_swift_state(res):
     swifts_list_cache = cache.get('mqtt_list_swifts')
     for swift in swifts_list_cache:
-        if res['topic'] == swift['topic']:
+        if res['topic'] == swift['topic_check']:
+            print('find check state')
             model = Swift.objects.get(topic=swift['topic'])
             payload = translate_swift_payload(res['payload'])
-            if model.state != payload or model.topic_check != payload:
-                print('аномалии в работе реле '+ model.name)
+            if str(model.state) != str(payload):
+                print(str(model.state) + ' ' + str(payload))
+                print('аномалии в работе реле ' + model.name)
                 #  @Todo информировать о аномалиях в топике реле
 
 
