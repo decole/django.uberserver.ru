@@ -24,12 +24,15 @@ def analise(res):
     if param and param_site:
         if param_site > param:
             reset_cache()
-            print('refresh analise config, because site config change')
+            # print('refresh analise config, because site config change')
     if not cache.get('mqtt_list_sensors') or not cache.get('mqtt_list_swifts'):
-        sensors_list = Sensor.objects.filter(type__type_name='sensor').values()
-        swifts_list = Swift.objects.filter(type__type_name='swift').values()
-        cache.set('mqtt_list_sensors', sensors_list)
-        cache.set('mqtt_list_swifts', swifts_list)
+        refresh_config_sensors()
+        refresh_config_swifts()
+        # sensors_list = Sensor.objects.filter(type__type_name='sensor').values()
+        # swifts_list = Swift.objects.filter(type__type_name='swift').values()
+        # cache.set('mqtt_list_sensors', sensors_list)
+        # cache.set('mqtt_list_swifts', swifts_list)
+
     sensors_list_cache = cache.get('mqtt_list_sensors')
     swifts_list_cache = cache.get('mqtt_list_swifts')
     for sensor in sensors_list_cache:
@@ -60,6 +63,7 @@ def reset_cache():
 
 def alarm(res):
     print('alarm! sensor ' + res['topic'] + ' data is not ok (' + res['payload'] + ')')
+#     @Todo отправить на почту сообщение и в телеграм
 
 
 def save_to_db(obj, res):
@@ -80,11 +84,43 @@ def save_message_payload(res):
 
 
 def change_state(res):
+    swifts_list_cache = cache.get('mqtt_list_swifts')
     #  change state swift on db
-    #  refresh cache all swifts
-    pass
+    for swift in swifts_list_cache:
+        if res['topic'] == swift['topic']:
+            payload = translate_swift_payload(res['payload'])
+            model = Swift.objects.get(topic=swift['topic'])
+            model.state = int(payload)
+            model.save()
+    refresh_config_swifts()
 
 
 def check_swift_state(res):
-    #  analise cache data and mqtt payload
-    pass
+    swifts_list_cache = cache.get('mqtt_list_swifts')
+    for swift in swifts_list_cache:
+        if res['topic'] == swift['topic_check']:
+            print('find check state')
+            model = Swift.objects.get(topic=swift['topic'])
+            payload = translate_swift_payload(res['payload'])
+            if str(model.state) != str(payload):
+                print(str(model.state) + ' ' + str(payload))
+                print('аномалии в работе реле ' + model.name)
+                #  @Todo информировать о аномалиях в топике реле
+
+
+def refresh_config_swifts():
+    swifts_list = Swift.objects.filter(type__type_name='swift').values()
+    cache.set('mqtt_list_swifts', swifts_list)
+
+
+def refresh_config_sensors():
+    sensors_list = Sensor.objects.filter(type__type_name='sensor').values()
+    cache.set('mqtt_list_sensors', sensors_list)
+
+
+def translate_swift_payload(payload):
+    if payload == 'on':
+        payload = 1
+    if payload == 'off':
+        payload = 0
+    return payload
