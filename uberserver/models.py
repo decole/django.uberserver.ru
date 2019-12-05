@@ -1,10 +1,12 @@
+import datetime
+
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 
 
 def default_time():
-    return timezone.now()
+    return timezone.now() + datetime.timedelta(hours=4)
 
 
 class Link(models.Model):
