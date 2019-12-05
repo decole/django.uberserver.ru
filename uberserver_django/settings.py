@@ -145,3 +145,14 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+
+# EMAIL CONFIG https://docs.djangoproject.com/en/2.2/topics/email/
+DEFAULT_CHARSET = 'utf-8'
+EMAIL_HOST = 'yandex.ru'
+EMAIL_PORT = 25
+EMAIL_HOST_USER = 'decole'
+EMAIL_HOST_PASSWORD = '123123'
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True
+EMAIL_TIMEOUT = 60

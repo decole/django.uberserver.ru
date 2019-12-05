@@ -50,3 +50,21 @@ def mqttApi(request):
         payload.save()
         '''
         return HttpResponse(json.dumps([{"response": "ok"}, {"method": "POST"}]), content_type="application/json")
+
+
+def login(request):
+    model = {}
+    return render(request, 'adminlte/login.html', model)
+
+
+def register(request):
+    model = {}
+    return render(request, 'adminlte/login.html', model)
+
+
+def activate(request):
+    return render(request, 'adminlte/login.html')
+
+
+def logout(request):
+    return render(request, 'adminlte/login.html')
