@@ -1,39 +1,37 @@
 import json
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.shortcuts import render
-
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login, logout
 from uberserver.helpers.mqtt_helper import analise
-from uberserver.models import Sensor, Swift, MqttPayload
+from uberserver.models import Sensor, Swift
+from django.contrib.auth.models import User
 
 
 def index(request):
-    model = {'title': 'Sensors', 'type_object': 'Index'}
-    return render(request, 'pages/main_pages/index.html', model)
+    if request.user.is_authenticated:
+        model = {'title': 'Sensors', 'type_object': 'Index'}
+        return render(request, 'pages/main_pages/index.html', model)
+    else:
+        return redirect('login')
 
 
 def sensors(request):
-    sensor_list = Sensor.objects.all()
-    model = {'title': 'Sensors', 'type_object': 'sensor', 'sensor_list': sensor_list}
-    return render(request, 'pages/main_pages/sensors.html', model)
+    if request.user.is_authenticated:
+        sensor_list = Sensor.objects.all()
+        model = {'title': 'Sensors', 'type_object': 'sensor', 'sensor_list': sensor_list}
+        return render(request, 'pages/main_pages/sensors.html', model)
+    else:
+        return redirect('login')
 
 
 def swifts(request):
-    swift_list = Swift.objects.all()
-    model = {'title': 'Swifts', 'type_object': 'swift', 'swift_list': swift_list}
-    return render(request, 'pages/main_pages/swifts.html', model)
-
-
-# def sensor(request, id_sensor):
-#     sensor_one = Sensor.objects.get(id=id_sensor).get_sensor_data()
-#     model = {'title': 'Sensor', 'type_object': 'sensor', 'sensor': sensor_one}
-#     return render(request, 'pages/sensors/sensor.html', model)
-
-
-# def swift(request, id_swift):
-#     swift_one = Swift.objects.get(id=id_swift).get_swift_data()
-#     model = {'title': 'Swift', 'type_object': 'swift', 'swift': swift_one}
-#     return render(request, 'pages/swifts/swift.html', model)
+    if request.user.is_authenticated:
+        swift_list = Swift.objects.all()
+        model = {'title': 'Swifts', 'type_object': 'swift', 'swift_list': swift_list}
+        return render(request, 'pages/main_pages/swifts.html', model)
+    else:
+        return redirect('login')
 
 
 @csrf_exempt
@@ -43,28 +41,50 @@ def mqttApi(request):
     elif request.method == 'POST':
         res = json.loads(request.body.decode())
         analise(res)  # функция анализатора
-        '''
-        payload = MqttPayload()
-        payload.topic = res['topic']
-        payload.payload = res['payload']
-        payload.save()
-        '''
         return HttpResponse(json.dumps([{"response": "ok"}, {"method": "POST"}]), content_type="application/json")
 
 
-def login(request):
-    model = {}
+def login_page(request):
+    model = {'login': ''}
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        model = {'login': username}
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('index')
+        else:
+            model = {'login': username, 'message': 'логин или пароль не подходят'}
+            return render(request, 'adminlte/login.html', model)
     return render(request, 'adminlte/login.html', model)
 
 
-def register(request):
-    model = {}
-    return render(request, 'adminlte/login.html', model)
+def register_page(request):
+    if request.user.is_authenticated:
+        return redirect('index')
+    else:
+        model = {'message': 'lol'}
+        if request.method == "POST":
+            model = {'message': 'post'}
+            username = request.POST.get('username')
+            email = request.POST.get('email')
+            password = request.POST.get('password')
+            if username is '' or email is '' or password is '':
+                model = {'message': 'введите полностью все данные'}
+                return render(request, 'adminlte/register.html', model)
+            else:
+                user = User.objects.create_user(username, email, password)
+                model = {'succes': 'регистрация прошла успешно'}
+                render(request, 'adminlte/as_registered.html', model)
+
+        return render(request, 'adminlte/register.html', model)
+#
+#
+# def activate(request):
+#     return render(request, 'adminlte/login.html')
 
 
-def activate(request):
-    return render(request, 'adminlte/login.html')
-
-
-def logout(request):
-    return render(request, 'adminlte/login.html')
+def logout_page(request):
+    logout(request)
+    return redirect('login')

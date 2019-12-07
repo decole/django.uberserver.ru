@@ -24,9 +24,9 @@
             <li class="header">{% block nav_heading %}MAIN NAVIGATION{% endblock %}</li>
 
             {% block nav_links %}
-                <li class="{% add_active 'index' exact_match=True %}"><a href="/"><i class="fa fa-shirtsinbulk"></i> <span>Main</span></a></li>
-                <li class="{% add_active 'sensors' %}"><a href="/sensors/"><i class="fa fa-dashboard"></i> <span>Sensors</span></a></li>
-                <li class="{% add_active 'swifts' exact_match=True %}"><a href="/swifts/"><i class="fa fa-dashboard"></i> <span>Swifts</span></a></li>
+                <li class="{% add_active 'index' exact_match=True %}"><a href="{% url 'index' %}"><i class="fa fa-shirtsinbulk"></i> <span>Main</span></a></li>
+                <li class="{% add_active 'sensors' %}"><a href="{% url 'sensors' %}"><i class="fa fa-dashboard"></i> <span>Sensors</span></a></li>
+                <li class="{% add_active 'swifts' exact_match=True %}"><a href="{% url 'swifts' %}"><i class="fa fa-dashboard"></i> <span>Swifts</span></a></li>
                 <li class=""><a href="/charts/"><i class="fa fa-bar-chart"></i> <span>Charts</span></a></li>
                 <li><a href="https://blog.uberserver.ru/"><i class="fa fa-link"></i> <span>Blog</span></a></li>
             {% endblock nav_links %}

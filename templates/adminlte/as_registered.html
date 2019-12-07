@@ -1,0 +1,17 @@
+{% extends "adminlte/base.html" %}
+{% load i18n static %}
+
+{% block body_class %}login-page{% endblock %}
+
+{% block body %}
+    <div class="login-box">
+        <div class="login-box-body">
+            {% block login_form %}
+                    <div class="form-group has-feedback">
+                        {{ succes }}
+                    </div>
+            {% endblock login_form %}
+
+        </div>
+    </div>
+{% endblock %}

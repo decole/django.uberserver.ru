@@ -99,7 +99,7 @@ def check_swift_state(res):
     swifts_list_cache = cache.get('mqtt_list_swifts')
     for swift in swifts_list_cache:
         if res['topic'] == swift['topic_check']:
-            print('find check state')
+            # print('find check state')
             model = Swift.objects.get(topic=swift['topic'])
             payload = translate_swift_payload(res['payload'])
             if str(model.state) != str(payload):
