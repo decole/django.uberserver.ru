@@ -4,8 +4,11 @@
 
             <div class="info-box-content sensor-control" data-sensor-topic="{{ sensor_topic }}" data-sensor-id="{{ sensor_id }}">
               <span class="info-box-text">{{ sensor_name }}</span>
-              <span class="info-box-number">{{  sensor_topic }}</span>
-              <span class="info-box-number">id: {{ sensor_id }} </span>
+                  <span class="info-box-number"><span data-sensor-value="{{ sensor_topic }}"></span>
+                  <span>{{ sensor_format }}</span>
+              </span>
+{#              <span class="info-box-number">{{  sensor_topic }}</span>#}
+{#              <span class="info-box-number">id: {{ sensor_id }} </span>#}
             </div>
             <!-- /.info-box-content -->
           </div>

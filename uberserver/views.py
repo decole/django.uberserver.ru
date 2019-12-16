@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
-from uberserver.helpers.mqtt_helper import analise
+from uberserver.helpers.mqtt_helper import analise, get_payload, post_payload
 from uberserver.models import Sensor, Swift
 from django.contrib.auth.models import User
 
@@ -35,13 +35,39 @@ def swifts(request):
 
 
 @csrf_exempt
-def mqttApi(request):
+def mqtt_api(request):
     if request.method == 'GET':
         return HttpResponse(json.dumps([{"response": "ok"}, {"method": "GET"}]), content_type="application/json")
-    elif request.method == 'POST':
+    if request.method == 'POST':
         res = json.loads(request.body.decode())
         analise(res)  # функция анализатора
         return HttpResponse(json.dumps([{"response": "ok"}, {"method": "POST"}]), content_type="application/json")
+
+
+@csrf_exempt
+def mqtt_api_get(request):
+    if request.method == 'GET':
+        if request.GET.get('topic') is not None:
+            topic = request.GET.get('topic')
+            payload = get_payload(topic)
+            return HttpResponse(
+                json.dumps([{"topic": topic, "payload": payload}]), content_type="application/json")
+        return HttpResponse(None)
+    if request.method == 'POST':
+        return HttpResponse(None)
+
+
+@csrf_exempt
+def mqtt_api_post(request):
+    if request.method == 'GET':
+        return HttpResponse(None)
+    if request.method == 'POST':
+        topic = request.POST.get('topic')
+        payload = request.POST.get('payload')
+        status = post_payload(topic, payload)
+        return HttpResponse(
+            json.dumps([{"status": status}]), content_type="application/json")
+    return HttpResponse(json.dumps([{"status": "false"}]), content_type="application/json")
 
 
 def login_page(request):

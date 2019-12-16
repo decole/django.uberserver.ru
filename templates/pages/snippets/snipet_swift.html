@@ -4,11 +4,11 @@
 
             <div class="info-box-content">
               <span class="info-box-text">{{ swift_name }}</span>
-                <div class="btn-group relay-control" data-swift-topic="{{ swift_topic }}" data-swift-id="{{ swift_id }}">
-                  <button type="button" class="btn btn-success">On</button>
-                  <button type="button" class="btn btn-danger">Off</button>
+                <div class="btn-group relay-control" data-swift-topic="{{ swift_topic }}" data-swift-topic-check="{{ swift_check }}" data-swift-id="{{ swift_id }}" data-swift-on="{{ swift_on }}" data-swift-off="{{ swift_off }}">
+                  <button type="button" class="btn btn-success" value="on">On</button>
+                  <button type="button" class="btn btn-danger" value="off">Off</button>
                 </div>
-                <span class="info-box-text">status: off</span>
+                <span class="info-box-text">status: <span data-swift-value="{{ swift_topic }}"></span></span>
             </div>
             <!-- /.info-box-content -->
           </div>

@@ -12,6 +12,7 @@
 # функция отправки команд микроконтроллерам
 from datetime import datetime
 from django.core.cache import cache
+from paho.mqtt.publish import single
 from uberserver_django.settings import env
 from uberserver.models import Sensor, Swift, MqttPayload
 
@@ -124,3 +125,13 @@ def translate_swift_payload(payload):
     if payload == 'off':
         payload = 0
     return payload
+
+
+def get_payload(topic):
+    return cache.get(topic)
+
+
+def post_payload(topic, payload):
+    single(topic, payload=payload, qos=0, retain=False, hostname=env('MQTT_IP'),
+           port=env.int('MQTT_PORT'), client_id="SITE", keepalive=60, will=None, auth=None, tls=None, transport="tcp")
+    return True

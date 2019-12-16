@@ -7,7 +7,7 @@
 <div class="row">
 
 {% for sensor in sensor_list %}
-    {% with sensor_topic=sensor.topic sensor_name=sensor.name sensor_id=sensor.id %}
+    {% with sensor_topic=sensor.topic sensor_name=sensor.name sensor_id=sensor.id sensor_format=sensor.format_sensor.format_symbol %}
         {% include "pages/snippets/snipet_sensor.html" %}
     {% endwith %}
 {% endfor %}
