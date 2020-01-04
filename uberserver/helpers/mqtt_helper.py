@@ -13,6 +13,8 @@
 from datetime import datetime
 from django.core.cache import cache
 from paho.mqtt.publish import single
+
+from uberserver.helpers.telegram_helper import send_telegram_message
 from uberserver_django.settings import env
 from uberserver.models import Sensor, Swift, MqttPayload
 
@@ -64,6 +66,7 @@ def reset_cache():
 
 def alarm(res):
     print('alarm! sensor ' + res['topic'] + ' data is not ok (' + res['payload'] + ')')
+    send_telegram_message('alarm! sensor ' + res['topic'] + ' data is not ok (' + res['payload'] + ')')
 #     @Todo отправить на почту сообщение и в телеграм
 
 
@@ -106,7 +109,7 @@ def check_swift_state(res):
             if str(model.state) != str(payload):
                 print(str(model.state) + ' ' + str(payload))
                 print('аномалии в работе реле ' + model.name)
-                #  @Todo информировать о аномалиях в топике реле
+                send_telegram_message('аномалии в работе реле ' + model.name)
 
 
 def refresh_config_swifts():

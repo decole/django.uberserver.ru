@@ -80,11 +80,11 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         REQUEST_KWARGS = {
-            'proxy_url': 'socks5://185.219.83.21:1080',
+            'proxy_url': settings.PROXY_URL,
             # Optional, if you need authentication:
             'urllib3_proxy_kwargs': {
-                'username': 'decole',
-                'password': 'wkyeGuVT',
+                'username': settings.PROXY_LOGIN,
+                'password': settings.PROXY_PASSWORD,
             }
         }
         updater = Updater(settings.TELEGRAM_TOKEN, use_context=True,

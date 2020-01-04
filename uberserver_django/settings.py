@@ -159,6 +159,8 @@ EMAIL_TIMEOUT = 60
 
 
 # Telegram Bot configs
-TELEGRAM_TOKEN = '985737099:AAFA5Gon501s6odoKRzcgYQW6mz8OBqG7nI'  # '419662740:AAGQWcSDsvUVtp4-BTB7yt2hGl_x6D3JQ38'
-PROXY_URL = 'https://telegg.ru/orig/bot'
-# 'http://decole:wkyeGuVT@185.219.83.21:3128'
+TELEGRAM_TOKEN = '985737099:AAFA5Gon501s6odoKRzcgYQW6mz8OBqG7nI'
+PROXY_URL = 'socks5://185.219.83.21:1080'
+PROXY_LOGIN = 'decole'
+PROXY_PASSWORD = 'wkyeGuVT'
+PROXY_SOCKS5 = 'socks5://decole:wkyeGuVT@185.219.83.21:1080'
