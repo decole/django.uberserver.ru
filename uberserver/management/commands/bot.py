@@ -5,6 +5,8 @@ import logging
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
 # Enable logging
+from uberserver.helpers.mqtt_helper import post_payload
+
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
 
@@ -20,7 +22,12 @@ def start(update, context):
 
 def help(update, context):
     """Send a message when the command /help is issued."""
-    update.message.reply_text('Help!')
+    update.message.reply_text('''
+/set <seconds> поставить таймер
+/unset - отмена таймера 
+/lampOn - включить лампу
+/lampOff - выключить лампу
+    ''')
 
 
 def echo(update, context):
@@ -33,10 +40,9 @@ def error(update, context):
     logger.warning('Update "%s" caused error "%s"', update, context.error)
 
 
-def alarm(context):
+def alarm(update, context):
     """Send the alarm message."""
-    job = context.job
-    context.bot.send_message(job.context, text='Beep!')
+    update.message.reply_text('Beep!')
 
 
 def set_timer(update, context):
@@ -75,6 +81,25 @@ def unset(update, context):
     update.message.reply_text('Timer successfully unset!')
 
 
+def lamp_on(update, context):
+    topic = 'margulis/lamp01'
+    payload = 'on'
+    post_payload(topic, payload)
+    update.message.reply_text('Дампа включена')
+
+
+def lamp_off(update, context):
+    topic = 'margulis/lamp01'
+    payload = 'off'
+    post_payload(topic, payload)
+    update.message.reply_text('Дампа выключена')
+
+
+def weather(update, context):
+    # 'http://apidev.accuweather.com/currentconditions/v1/291309.json?language=ru-ru&apikey=hoArfRosT1215'
+    return update.message.reply_text('Погода - супер')
+
+
 class Command(BaseCommand):
     help = 'Телеграм-бот'
 
@@ -101,6 +126,10 @@ class Command(BaseCommand):
                                       pass_job_queue=True,
                                       pass_chat_data=True))
         dp.add_handler(CommandHandler("unset", unset, pass_chat_data=True))
+        dp.add_handler(CommandHandler("alarm", alarm))
+        dp.add_handler(CommandHandler("lampOn", lamp_on))
+        dp.add_handler(CommandHandler("lampOff", lamp_off))
+        dp.add_handler(CommandHandler("weather", weather))
 
         # on noncommand i.e message - echo the message on Telegram
         dp.add_handler(MessageHandler(Filters.text, echo))

@@ -160,3 +160,9 @@ class Message(models.Model):
     class Meta:
         verbose_name = 'Сообщение'
         verbose_name_plural = 'Сообщения'
+
+
+class Weather(models.Model):
+    text = models.CharField(max_length=255, help_text='Текс')
+    temperature = models.FloatField(help_text='Температура')
+    datetime = models.DateTimeField(help_text='Дата съема показаний', default=default_time)
