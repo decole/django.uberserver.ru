@@ -105,10 +105,6 @@ def register_page(request):
                 render(request, 'adminlte/as_registered.html', model)
 
         return render(request, 'adminlte/register.html', model)
-#
-#
-# def activate(request):
-#     return render(request, 'adminlte/login.html')
 
 
 def logout_page(request):

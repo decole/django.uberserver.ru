@@ -18,5 +18,6 @@ from django.urls import include, path
 
 urlpatterns = [
     path('', include('uberserver.urls')),
+    path('alice/', include('alice.urls')),
     path('admin/', admin.site.urls),
 ]
