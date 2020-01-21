@@ -7,7 +7,7 @@
 <div class="row">
 
 {% for swift in swift_list %}
-    {% with swift_topic=swift.topic swift_name=swift.name swift_id=swift.id %}
+    {% with swift_topic=swift.topic swift_name=swift.name swift_id=swift.id swift_check=swift.topic_check swift_on=swift.topic_check_on swift_off=swift.topic_check_off %}
         {% include "pages/snippets/snipet_swift.html" %}
     {% endwith %}
 {#    <p><a href="/swift/{{ swift.id }}">имя:{{ swift.name }} | топик:{{ swift.topic }}</a></p>#}

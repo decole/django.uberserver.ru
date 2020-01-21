@@ -29,7 +29,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'uberserver',
     'django_adminlte',
     'django_adminlte_theme',
+    'alice'
 ]
 
 MIDDLEWARE = [
@@ -54,9 +55,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.cache.UpdateCacheMiddleware',
+    #  'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.cache.FetchFromCacheMiddleware',
+    #  'django.middleware.cache.FetchFromCacheMiddleware',
 ]
 
 ROOT_URLCONF = 'uberserver_django.urls'
@@ -80,7 +81,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'uberserver_django.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
@@ -98,7 +98,6 @@ DATABASES = {
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -114,9 +113,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # https://docs.djangoproject.com/en/2.2/topics/cache/
-
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
@@ -130,15 +127,10 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
 LANGUAGE_CODE = env('LANGUAGE_CODE')
-
 TIME_ZONE = env('TIME_ZONE')
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
@@ -146,6 +138,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
+# Media files
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # EMAIL CONFIG https://docs.djangoproject.com/en/2.2/topics/email/
 DEFAULT_CHARSET = 'utf-8'
@@ -156,3 +151,11 @@ EMAIL_HOST_PASSWORD = '123123'
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
 EMAIL_TIMEOUT = 60
+
+
+# Telegram Bot configs
+TELEGRAM_TOKEN = '985737099:AAFA5Gon501s6odoKRzcgYQW6mz8OBqG7nI'
+PROXY_URL = 'socks5://185.219.83.21:1080'
+PROXY_LOGIN = 'decole'
+PROXY_PASSWORD = 'wkyeGuVT'
+PROXY_SOCKS5 = 'socks5://decole:wkyeGuVT@185.219.83.21:1080'
