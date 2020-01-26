@@ -1,3 +1,4 @@
+pycron
 environ
 certifi==2019.9.11
 chardet==3.0.4

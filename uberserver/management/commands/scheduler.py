@@ -1,9 +1,7 @@
 import time
-
 import pycron
 from django.core import management
 from django.core.management.base import BaseCommand
-
 from uberserver.helpers.notify_helper import notify
 from uberserver.models import Scheduler
 
