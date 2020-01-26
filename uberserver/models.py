@@ -123,7 +123,8 @@ class MqttPayload(models.Model):
         return self.topic
 
 
-class Profile(models.Model):
+# Профиль нотификации (почта, телеграм бот, сайт)
+class NotifyProfile(models.Model):
     external_id = models.PositiveIntegerField(
         verbose_name='Внешний ID пользователя',
         unique=True,
@@ -137,32 +138,50 @@ class Profile(models.Model):
 
     class Meta:
         verbose_name = 'Профиль'
-        verbose_name_plural = 'Профили'
+        verbose_name_plural = 'Профили нотификации'
 
 
-class Message(models.Model):
-    profile = models.ForeignKey(
-        Profile,
-        verbose_name='Профиль',
-        on_delete=models.PROTECT,
-    )
-    text = models.TextField(
-        verbose_name='Текст',
-    )
-    created_at = models.DateTimeField(
-        verbose_name='Время получения',
-        auto_now_add=True,
-    )
+# Сообщения для воркера, который будет отправлять данные по расписанию
+class NotifyMessage(models.Model):
+    profile = models.ForeignKey(NotifyProfile, verbose_name='Профиль', on_delete=models.PROTECT)
+    text = models.TextField(verbose_name='Текст')
+    created_at = models.DateTimeField(verbose_name='Время получения', auto_now_add=True)
+    done = models.BooleanField(default=0, verbose_name='статус сообщения')
 
     def __str__(self):
-        return f'Сообщение {self.pk} от {self.profile}'
+        return f'Сообщение {self.pk} от {self.profile} - {self.done}'
 
     class Meta:
         verbose_name = 'Сообщение'
-        verbose_name_plural = 'Сообщения'
+        verbose_name_plural = 'Сообщения нотификации'
 
 
 class Weather(models.Model):
-    text = models.CharField(max_length=255, help_text='Текс')
-    temperature = models.FloatField(help_text='Температура')
-    datetime = models.DateTimeField(help_text='Дата съема показаний', default=default_time)
+    text = models.CharField(max_length=255, verbose_name='Текс')
+    temperature = models.FloatField(verbose_name='Температура')
+    datetime = models.DateTimeField(verbose_name='Дата съема показаний', default=default_time)
+
+
+class Scheduler(models.Model):
+    command = models.CharField(max_length=255, verbose_name='Команда')
+    date_start = models.DateTimeField(auto_now=False, auto_now_add=False, blank=True, verbose_name='Начало')
+    date_end = models.DateTimeField(auto_now=False, auto_now_add=False, blank=True, null=True, verbose_name='Окончание')
+    periodic = models.CharField(null=True, max_length=255, verbose_name='Параметр периодичности')
+    active = models.BooleanField(null=True, default=0, verbose_name='Активно')
+    
+    def __str__(self):
+        return f'Задача {self.command} от {self.date_start} | {self.periodic} - {self.active}'
+    
+    def get_scheduler_data(self):
+        return {
+            'id': self.id,
+            'command': self.command,
+            'date_start': self.date_start,
+            'date_end': self.date_end,
+            'periodic': self.periodic,
+            'active': self.active,
+        }
+
+    class Meta:
+        verbose_name = 'задача'
+        verbose_name_plural = 'Планировщик задач'
