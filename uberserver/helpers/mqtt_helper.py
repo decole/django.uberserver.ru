@@ -14,6 +14,7 @@ from datetime import datetime
 from django.core.cache import cache
 from paho.mqtt.publish import single
 
+from uberserver.helpers.notify_helper import notify, send_notify
 from uberserver.helpers.telegram_helper import send_telegram_message
 from uberserver_django.settings import env
 from uberserver.models import Sensor, Swift, MqttPayload
@@ -65,9 +66,9 @@ def reset_cache():
 
 
 def alarm(res):
-    print('alarm! sensor ' + res['topic'] + ' data is not ok (' + res['payload'] + ')')
-    send_telegram_message('alarm! sensor ' + res['topic'] + ' data is not ok (' + res['payload'] + ')')
-#     @Todo отправить на почту сообщение и в телеграм
+    message = 'alarm! sensor ' + res['topic'] + ' data is not ok (' + res['payload'] + ')'
+    send_telegram_message(message)
+    send_notify(['email', 'telegram'], message)
 
 
 def save_to_db(obj, res):

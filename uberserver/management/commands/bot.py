@@ -1,10 +1,9 @@
+import logging
+import requests
+
 from django.core.management.base import BaseCommand
 from django.conf import settings
-import logging
-
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
-
-# Enable logging
 from uberserver.helpers.mqtt_helper import post_payload
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -27,6 +26,10 @@ def help(update, context):
 /unset - отмена таймера 
 /lampOn - включить лампу
 /lampOff - выключить лампу
+/alarm - тестовое сообщение
+/weather - погода сейчас AcuWeather
+/secureOn - включить систему безопасности
+/secureOff - выключить систему безопасности
     ''')
 
 
@@ -96,8 +99,29 @@ def lamp_off(update, context):
 
 
 def weather(update, context):
-    # 'http://apidev.accuweather.com/currentconditions/v1/291309.json?language=ru-ru&apikey=hoArfRosT1215'
-    return update.message.reply_text('Погода - супер')
+    try:
+        res = requests.get("http://apidev.accuweather.com/currentconditions/v1/291309.json?language=ru-ru&apikey=hoArfRosT1215")
+        data = res.json()
+        # time = str(data[0]['EpochTime'])
+        weather_text = str(data[0]['WeatherText'])
+        temperature = str(data[0]['Temperature']['Metric']['Value'])
+        return update.message.reply_text('Сейчас погода в Камышине: ' + temperature + 'C`' + weather_text)
+    except Exception as e:
+        return update.message.reply_text("Exception (weather):", e)
+
+
+def secure_on(update, context):
+    topic = 'home/security/cocking'
+    payload = '1'
+    post_payload(topic, payload)
+    return update.message.reply_text('Охранная система перешла в дежурный режим')
+
+
+def secure_off(update, context):
+    topic = 'home/security/cocking'
+    payload = '0'
+    post_payload(topic, payload)
+    return update.message.reply_text('Охранная система отключена')
 
 
 class Command(BaseCommand):
@@ -130,6 +154,8 @@ class Command(BaseCommand):
         dp.add_handler(CommandHandler("lampOn", lamp_on))
         dp.add_handler(CommandHandler("lampOff", lamp_off))
         dp.add_handler(CommandHandler("weather", weather))
+        dp.add_handler(CommandHandler("secureOn", secure_on))
+        dp.add_handler(CommandHandler("secureOff", secure_off))
 
         # on noncommand i.e message - echo the message on Telegram
         dp.add_handler(MessageHandler(Filters.text, echo))

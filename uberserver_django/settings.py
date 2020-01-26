@@ -144,10 +144,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # EMAIL CONFIG https://docs.djangoproject.com/en/2.2/topics/email/
 DEFAULT_CHARSET = 'utf-8'
-EMAIL_HOST = 'yandex.ru'
-EMAIL_PORT = 25
-EMAIL_HOST_USER = 'decole'
-EMAIL_HOST_PASSWORD = '123123'
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'decole2014@yandex.ru'
+EMAIL_HOST_PASSWORD = 'ymplesrvtcyxjkmm'
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
 EMAIL_TIMEOUT = 60

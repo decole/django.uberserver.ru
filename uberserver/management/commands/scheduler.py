@@ -1,3 +1,4 @@
+import datetime
 import time
 import pycron
 from django.core import management
@@ -18,7 +19,8 @@ class Command(BaseCommand):
                 start_date = int(current_task['date_start'].timestamp())
                 if current_task["active"] and now > start_date and pycron.is_now(current_task['periodic']):
                     management.call_command(current_task['command'])
-
+                    datetime_now = datetime.datetime.today().strftime("%d.%m.%Y %H:%M:%S")
+                    notify(['site'], 'task - ' + current_task['command'] + 'is finished ' + datetime_now)
         except Exception as e:
             print("Exception (scheduler):", e)
             # create message in Notify table to email, t.bot, site
