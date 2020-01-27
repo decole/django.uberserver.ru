@@ -9,7 +9,7 @@ from ..models import NotifyMessage
 class EmailWorker(BaseWorker):
     @staticmethod
     def __send(message):
-        send_email('почтовая рассылка <email_worker>', message, env.str('NOTIFY_EMAILS'))
+        send_email('Сервисное сообщение', message, env.str('NOTIFY_EMAILS'))
 
     @staticmethod
     def __get_scope():

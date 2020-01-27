@@ -158,10 +158,10 @@ class Scheduler(models.Model):
     date_end = models.DateTimeField(auto_now=False, auto_now_add=False, blank=True, null=True, verbose_name='Окончание')
     periodic = models.CharField(null=True, max_length=255, verbose_name='Параметр периодичности')
     active = models.BooleanField(null=True, default=0, verbose_name='Активно')
-    
+
     def __str__(self):
         return f'Задача {self.command} от {self.date_start} | {self.periodic} - {self.active}'
-    
+
     def get_scheduler_data(self):
         return {
             'id': self.id,
@@ -181,3 +181,44 @@ class ScheduleTaskHistory(models.Model):
     task = models.CharField(max_length=255, verbose_name='Команда')
     datetime_start = models.DateTimeField(default=default_time, verbose_name='Запущена')
     state = models.BooleanField(null=True, default=0, verbose_name='Состояние')
+
+    class Meta:
+        verbose_name = 'Выполненная задача'
+        verbose_name_plural = 'Планировщик задач - История'
+
+    def __str__(self):
+        return f'Задача {self.task} от {self.datetime_start} - {self.state}'
+
+
+class SmartHomeSystemObject(models.Model):
+    # состояние сенсоров (все ли постоянно обновляются)
+    # состояние полива
+    # состояние охранной системы
+    # состояние пожарной системы
+
+    SENSOR = 'SE'
+    WATERING = 'WA'
+    SECURITY = 'SC'
+    FIRE_SECURITY = 'SF'
+
+    NOTIFY_CHOICES = [
+        (SENSOR, 'sensor'),
+        (WATERING, 'watering'),
+        (SECURITY, 'security'),
+        (FIRE_SECURITY, 'fire_security'),
+    ]
+
+    name = models.CharField(max_length=255, verbose_name='Название')
+    current_message = models.CharField(max_length=255, verbose_name='Кратко')
+    state = models.BooleanField(null=True, default=0, verbose_name='Состояние')
+    type = models.CharField(max_length=2, choices=NOTIFY_CHOICES, default=SENSOR)
+    message_ok = models.CharField(max_length=255, verbose_name='Сообщение - норма')
+    message_warning = models.CharField(max_length=255, verbose_name='Сообщение - авария')
+    last_update = models.DateTimeField(auto_now=False, blank=False, verbose_name='Последнее сообщение')
+
+    class Meta:
+        verbose_name = 'Модуль системы'
+        verbose_name_plural = 'Модули системы'
+
+    def __str__(self):
+        return f'Система {self.name} {self.type} - {self.state} {self.current_message}'
