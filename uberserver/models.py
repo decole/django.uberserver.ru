@@ -175,3 +175,9 @@ class Scheduler(models.Model):
     class Meta:
         verbose_name = 'задача'
         verbose_name_plural = 'Планировщик задач'
+
+
+class ScheduleTaskHistory(models.Model):
+    task = models.CharField(max_length=255, verbose_name='Команда')
+    datetime_start = models.DateTimeField(default=default_time, verbose_name='Запущена')
+    state = models.BooleanField(null=True, default=0, verbose_name='Состояние')

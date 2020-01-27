@@ -127,7 +127,7 @@ def secure_off(update, context):
 
 
 def sensors(update, context):
-    return update.message.reply_text(StateSmartHome.get_state('telegram_bot'))
+    return update.message.reply_text(StateSmartHome.state_telegram())
 
 
 class Command(BaseCommand):

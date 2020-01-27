@@ -1,9 +1,9 @@
 {% extends 'adminlte/base.html' %}
 
-{% block title %}Articles for {{ type_object }}{% endblock %}
+{% block title %} {{ title }} - Uberserver.ru{% endblock %}
 
 {% block content %}
-<h1>Swifts</h1>
+<h1>{{ title }}</h1>
 <div class="row">
 
 {% for swift in swift_list %}

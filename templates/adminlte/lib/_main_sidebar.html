@@ -24,11 +24,15 @@
             <li class="header">{% block nav_heading %}MAIN NAVIGATION{% endblock %}</li>
 
             {% block nav_links %}
-                <li class="{% add_active 'index' exact_match=True %}"><a href="{% url 'index' %}"><i class="fa fa-shirtsinbulk"></i> <span>Main</span></a></li>
-                <li class="{% add_active 'sensors' %}"><a href="{% url 'sensors' %}"><i class="fa fa-dashboard"></i> <span>Sensors</span></a></li>
-                <li class="{% add_active 'swifts' exact_match=True %}"><a href="{% url 'swifts' %}"><i class="fa fa-dashboard"></i> <span>Swifts</span></a></li>
-                <li class=""><a href="/charts/"><i class="fa fa-bar-chart"></i> <span>Charts</span></a></li>
+                <li class="{% add_active 'index' exact_match=True %}"><a href="{% url 'index' %}"><i class="fa fa-shirtsinbulk"></i> <span>Главная</span></a></li>
+                <li class="{% add_active 'sensors' %}"><a href="{% url 'sensors' %}"><i class="fa fa-dashboard"></i> <span>Сенсоры</span></a></li>
+{#                <li class="{% add_active 'swifts' exact_match=True %}"><a href="{% url 'swifts' %}"><i class="fa fa-dashboard"></i> <span>Swifts</span></a></li>#}
+                <li class="{% add_active 'margulis' exact_match=True %}"><a href="{% url 'margulis' %}"><i class="fa fa-dashboard"></i> <span>Пристройка</span></a></li>
+                <li class="{% add_active 'kitchen' exact_match=True %}"><a href="{% url 'kitchen' %}"><i class="fa fa-dashboard"></i> <span>Кухня</span></a></li>
+                <li class="{% add_active 'watering' exact_match=True %}"><a href="{% url 'watering' %}"><i class="fa fa-dashboard"></i> <span>Автополив</span></a></li>
+                <li class=""><a href="#"><i class="fa fa-bar-chart"></i> <span>Charts</span></a></li>
                 <li><a href="https://blog.uberserver.ru/"><i class="fa fa-link"></i> <span>Blog</span></a></li>
+                <li><a href="/admin/"><i class="fa fa-link"></i> <span>Admin CRUD</span></a></li>
             {% endblock nav_links %}
             {% endblock nav_links_outer %}
         </ul>

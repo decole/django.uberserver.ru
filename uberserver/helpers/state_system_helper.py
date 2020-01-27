@@ -11,18 +11,25 @@ class StateSmartHome(object):
     def state_telegram():
         query_temperature = Sensor.objects.filter(type__type_name='sensor', format_sensor__format_name='temperature')
         query_humidity = Sensor.objects.filter(type__type_name='sensor', format_sensor__format_name='humidity')
-        # @Todo добавить статус сенсора протечки
+        query_leakage = Sensor.objects.filter(type__type_name='leakage')
+
         message = ''
         for temperature in query_temperature:
             if get_payload(temperature.topic) is None:
-                message = message + temperature.message_info + ': не имеет текущих данных'
+                message = message + temperature.message_info + ": не имеет текущих данных \n"
             else:
-                message = message + temperature.message_info + ': ' + get_payload(temperature.topic) + '°C'
+                message = message + temperature.message_info + ": " + get_payload(temperature.topic) + "°C \n"
         for humidity in query_humidity:
             if get_payload(humidity.topic) is None:
-                message = message + humidity.message_info + ': не имеет текущих данных'
+                message = message + humidity.message_info + ": не имеет текущих данных \n"
             else:
-                message = message + humidity.message_info + ': ' + get_payload(humidity.topic) + '°C'
+                message = message + humidity.message_info + ": " + get_payload(humidity.topic) + '%' + "\n"
+
+        for leakage in query_leakage:
+            if get_payload(leakage.topic) is None:
+                message = message + leakage.message_info + ": не имеет текущих данных \n"
+            else:
+                message = message + leakage.message_info + ': ' + get_payload(leakage.topic) + "\n"
 
         return 'Состояние сенсоров:' + "\n" + message
 

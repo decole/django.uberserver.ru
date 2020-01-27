@@ -34,6 +34,33 @@ def swifts(request):
         return redirect('login')
 
 
+def swifts_water(request):
+    if request.user.is_authenticated:
+        swift_list = Swift.objects.all().order_by('id').filter(link__link_name='greenhouse')
+        model = {'title': 'Автополив', 'type_object': 'swift', 'swift_list': swift_list}
+        return render(request, 'pages/main_pages/swifts.html', model)
+    else:
+        return redirect('login')
+
+
+def swifts_kitchen(request):
+    if request.user.is_authenticated:
+        swift_list = Swift.objects.all().filter(topic='home/ralay01')
+        model = {'title': 'Реле на кухне', 'type_object': 'swift', 'swift_list': swift_list}
+        return render(request, 'pages/main_pages/swifts.html', model)
+    else:
+        return redirect('login')
+
+
+def swifts_margulis(request):
+    if request.user.is_authenticated:
+        swift_list = Swift.objects.all().filter(topic='margulis/lamp01')
+        model = {'title': 'Реле в пристройке', 'type_object': 'swift', 'swift_list': swift_list}
+        return render(request, 'pages/main_pages/swifts.html', model)
+    else:
+        return redirect('login')
+
+
 @csrf_exempt
 def mqtt_api(request):
     if request.method == 'GET':
