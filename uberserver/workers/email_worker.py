@@ -1,16 +1,26 @@
+from uberserver_django.settings import env
 from .base_worker import BaseWorker
+from ..helpers.email_helper import send_email
+from ..models import NotifyMessage
 
 
+# Воркер вызывается функцией run
+# Происходит работа по отправке почтовых сообщений
 class EmailWorker(BaseWorker):
-    # отправка сообщения через воркер
-    def send(self, user, message):
-        pass
+    @staticmethod
+    def __send(message):
+        send_email('почтовая рассылка <email_worker>', message, env.str('NOTIFY_EMAILS'))
 
-    # вытаскиваем пачку задач
-    def get_scope(self):
-        pass
+    @staticmethod
+    def __get_scope():
+        # scope = NotifyMessage.objects.get()
+        return NotifyMessage.objects.filter(profile_notify='EM', done=False).order_by('id')[:2]
 
-    # запуск воркера
-    # стартуем, забираем пачку задач и рассылаем их
     def run(self):
-        pass
+        scope = self.__get_scope()
+        for work in scope:
+            self.__send(work.text)
+            model = NotifyMessage.objects.get(pk=work.pk)
+            model.done = True
+            model.save()
+        return True

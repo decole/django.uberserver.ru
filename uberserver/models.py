@@ -123,33 +123,23 @@ class MqttPayload(models.Model):
         return self.topic
 
 
-# Профиль нотификации (почта, телеграм бот, сайт)
-class NotifyProfile(models.Model):
-    external_id = models.PositiveIntegerField(
-        verbose_name='Внешний ID пользователя',
-        unique=True,
-    )
-    name = models.TextField(
-        verbose_name='Имя пользователя',
-    )
-
-    def __str__(self):
-        return f'#{self.external_id} {self.name}'
-
-    class Meta:
-        verbose_name = 'Профиль'
-        verbose_name_plural = 'Профили нотификации'
-
-
 # Сообщения для воркера, который будет отправлять данные по расписанию
 class NotifyMessage(models.Model):
-    profile = models.ForeignKey(NotifyProfile, verbose_name='Профиль', on_delete=models.PROTECT)
+    EMAIL = 'EM'
+    TELEGRAM = 'TE'
+    SITE = 'SI'
+    NOTIFY_CHOICES = [
+        (EMAIL, 'email'),
+        (TELEGRAM, 'telegram'),
+        (SITE, 'site'),
+    ]
+    profile_notify = models.CharField(max_length=2, choices=NOTIFY_CHOICES, default=EMAIL)
     text = models.TextField(verbose_name='Текст')
     created_at = models.DateTimeField(verbose_name='Время получения', auto_now_add=True)
     done = models.BooleanField(default=0, verbose_name='статус сообщения')
 
     def __str__(self):
-        return f'Сообщение {self.pk} от {self.profile} - {self.done}'
+        return f'{self.profile_notify} | Сообщение {self.pk} - {self.done}'
 
     class Meta:
         verbose_name = 'Сообщение'

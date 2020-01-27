@@ -5,6 +5,7 @@ from django.core.management.base import BaseCommand
 from django.conf import settings
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 from uberserver.helpers.mqtt_helper import post_payload
+from uberserver.helpers.state_system_helper import StateSmartHome
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
@@ -30,6 +31,7 @@ def help(update, context):
 /weather - погода сейчас AcuWeather
 /secureOn - включить систему безопасности
 /secureOff - выключить систему безопасности
+/sensors
     ''')
 
 
@@ -124,6 +126,10 @@ def secure_off(update, context):
     return update.message.reply_text('Охранная система отключена')
 
 
+def sensors(update, context):
+    return update.message.reply_text(StateSmartHome.get_state('telegram_bot'))
+
+
 class Command(BaseCommand):
     help = 'Телеграм-бот'
 
@@ -156,6 +162,7 @@ class Command(BaseCommand):
         dp.add_handler(CommandHandler("weather", weather))
         dp.add_handler(CommandHandler("secureOn", secure_on))
         dp.add_handler(CommandHandler("secureOff", secure_off))
+        dp.add_handler(CommandHandler("sensors", sensors))
 
         # on noncommand i.e message - echo the message on Telegram
         dp.add_handler(MessageHandler(Filters.text, echo))

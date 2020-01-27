@@ -144,14 +144,13 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # EMAIL CONFIG https://docs.djangoproject.com/en/2.2/topics/email/
 DEFAULT_CHARSET = 'utf-8'
-EMAIL_HOST = 'smtp.yandex.ru'
-EMAIL_PORT = 465
-EMAIL_HOST_USER = 'decole2014@yandex.ru'
-EMAIL_HOST_PASSWORD = 'ymplesrvtcyxjkmm'
-EMAIL_USE_TLS = False
-EMAIL_USE_SSL = True
-EMAIL_TIMEOUT = 60
-
+EMAIL_HOST = env.str('EMAIL_HOST')
+EMAIL_PORT = env.int('EMAIL_PORT')
+EMAIL_HOST_USER = env.str('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env.str('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS')
+EMAIL_USE_SSL = env.bool('EMAIL_USE_SSL')
+EMAIL_TIMEOUT = env.int('EMAIL_TIMEOUT')
 
 # Telegram Bot configs
 TELEGRAM_TOKEN = '985737099:AAFA5Gon501s6odoKRzcgYQW6mz8OBqG7nI'

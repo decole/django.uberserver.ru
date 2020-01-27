@@ -1,16 +1,24 @@
 from .base_worker import BaseWorker
+from ..helpers.telegram_helper import send_telegram_message
+from ..models import NotifyMessage
 
 
 class TelegramWorker(BaseWorker):
-    # отправка сообщения через воркер
-    def send(self, user, message):
-        pass
+    @staticmethod
+    def __send(message):
+        send_telegram_message(str(message))
 
-    # вытаскиваем пачку задач
-    def get_scope(self):
-        pass
+    @staticmethod
+    def __get_scope():
+        return NotifyMessage.objects.filter(profile_notify='TE', done=False).order_by('id')[:10]
 
-    # запуск воркера
-    # стартуем, забираем пачку задач и рассылаем их
     def run(self):
-        pass
+        scope = self.__get_scope()
+        message = ''
+        for work in scope:
+            message = message + (work.text + ' ' + work.created_at.strftime("%d.%m.%Y %H:%M:%S") + "\n")
+            model = NotifyMessage.objects.get(pk=work.pk)
+            model.done = True
+            model.save()
+        self.__send(message)
+        return True
