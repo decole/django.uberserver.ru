@@ -222,3 +222,12 @@ class SmartHomeSystemObject(models.Model):
 
     def __str__(self):
         return f'Система {self.name} {self.type} - {self.state} {self.current_message}'
+
+
+class ControllerState(models.Model):
+    # name - текстовое имя
+    # prevent_topic - топик, который будет использоваться для проверки
+    # update_at - последняя дата выхода на связь
+    # message_ok
+    # message_warning
+    pass
