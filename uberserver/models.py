@@ -225,9 +225,31 @@ class SmartHomeSystemObject(models.Model):
 
 
 class ControllerState(models.Model):
-    # name - текстовое имя
-    # prevent_topic - топик, который будет использоваться для проверки
-    # update_at - последняя дата выхода на связь
-    # message_ok
-    # message_warning
-    pass
+    name = models.CharField(max_length=255, verbose_name='Контроллер')
+    location = models.CharField(max_length=255, verbose_name='Где находится')
+    prevent_topic = models.CharField(max_length=200, null=False)  # топик, который будет использоваться для проверки
+    last_update = models.DateTimeField(auto_now=True, blank=False, verbose_name='Последнее сообщение')
+    message_ok = models.CharField(max_length=200, null=True, help_text='Когда все ок')
+    message_alarm = models.CharField(max_length=200, null=True, help_text='Сигнальная информация')
+    state = models.BooleanField(null=True, default=0, verbose_name='Состояние')
+    link = models.ForeignKey(Link, on_delete=models.CASCADE, help_text='Ссылка на объект')
+
+
+class SecuritySensor(models.Model):
+    name = models.CharField(max_length=255, verbose_name='Извещатель')
+    location = models.CharField(max_length=255, verbose_name='Где находится')
+    topic = models.CharField(max_length=200, null=False)
+    message_ok = models.CharField(max_length=200, null=True, help_text='Когда все ок')
+    message_alarm = models.CharField(max_length=200, null=True, help_text='Сигнальная информация')
+    state = models.BooleanField(null=True, default=0, verbose_name='Состояние')
+    link = models.ForeignKey(Link, on_delete=models.CASCADE, help_text='Ссылка на объект')
+
+
+class FireSecuritySystem(models.Model):
+    name = models.CharField(max_length=255, verbose_name='Извещатель')
+    location = models.CharField(max_length=255, verbose_name='Где находится')
+    topic = models.CharField(max_length=200, null=False)
+    message_ok = models.CharField(max_length=200, null=True, help_text='Когда все ок')
+    message_alarm = models.CharField(max_length=200, null=True, help_text='Сигнальная информация')
+    state = models.BooleanField(null=True, default=0, verbose_name='Состояние')
+    link = models.ForeignKey(Link, on_delete=models.CASCADE, help_text='Ссылка на объект')

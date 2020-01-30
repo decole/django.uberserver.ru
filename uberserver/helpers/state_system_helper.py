@@ -19,6 +19,7 @@ class StateSmartHome(object):
                 message = message + temperature.message_info + ": не имеет текущих данных \n"
             else:
                 message = message + temperature.message_info + ": " + get_payload(temperature.topic) + "°C \n"
+
         for humidity in query_humidity:
             if get_payload(humidity.topic) is None:
                 message = message + humidity.message_info + ": не имеет текущих данных \n"
@@ -31,7 +32,8 @@ class StateSmartHome(object):
             else:
                 message = message + leakage.message_info + ': ' + get_payload(leakage.topic) + "\n"
 
-        return 'Состояние сенсоров:' + "\n" + message
+        return "Состояние сенсоров:" + "\n" + message
+
 
     @staticmethod
     def state_alice():
