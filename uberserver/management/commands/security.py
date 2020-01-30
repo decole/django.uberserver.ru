@@ -1,5 +1,3 @@
-# manage.py mqtt - starting command
-# pip install paho-mqtt
 from django.core.management.base import BaseCommand, CommandError
 from uberserver_django.settings import env
 import paho.mqtt.client as mqtt
@@ -11,19 +9,18 @@ import json
 class MicroMQTTClass(mqtt.Client):
 
     def on_connect(self, mqttc, obj, flags, rc):
+        # print("rc: "+str(rc))
         print('connected')
 
     def on_message(self, mqttc, obj, msg):
-        url = env('URI_MQTT_API')
-        headers = {
-            'Content-type': 'application/json',
-        }
+        '''
+        @Todo сделать коннектор для пожарной и охранной системе
+        '''
         data = {"topic": msg.topic, "payload": msg.payload.decode()}  # , "payload": msg.payload.decode()
         ar = requests.post(url, data=json.dumps(data), headers=headers)
 
     def on_publish(self, mqttc, obj, mid):
-        # print("publishing: "+str(mid))
-        pass
+        print("publishing: "+str(mid))
 
     def on_subscribe(self, mqttc, obj, mid, granted_qos):
         print("Subscribed: "+str(mid)+" "+str(granted_qos))

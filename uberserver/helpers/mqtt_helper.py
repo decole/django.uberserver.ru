@@ -36,6 +36,8 @@ def analise(res):
         # swifts_list = Swift.objects.filter(type__type_name='swift').values()
         # cache.set('mqtt_list_sensors', sensors_list)
         # cache.set('mqtt_list_swifts', swifts_list)
+    # @Todo сделать связь с функцией проверки на доступность контроллеров
+    # отдельно хранить кэш с последней датой обновления топика
 
     sensors_list_cache = cache.get('mqtt_list_sensors')
     swifts_list_cache = cache.get('mqtt_list_swifts')
