@@ -218,10 +218,10 @@ class SmartHomeSystemObject(models.Model):
 
     class Meta:
         verbose_name = 'Модуль системы'
-        verbose_name_plural = 'Модули системы'
+        verbose_name_plural = 'Моули умного дома'
 
     def __str__(self):
-        return f'Система {self.name} {self.type} - {self.state} {self.current_message}'
+        return f'Система {self.name} {self.type} - {self.state} {self.state}'
 
 
 class ControllerState(models.Model):
@@ -234,6 +234,13 @@ class ControllerState(models.Model):
     state = models.BooleanField(null=True, default=0, verbose_name='Состояние')
     link = models.ForeignKey(Link, on_delete=models.CASCADE, help_text='Ссылка на объект')
 
+    class Meta:
+        verbose_name = 'Модуль'
+        verbose_name_plural = 'Состояние контроллеров'
+
+    def __str__(self):
+        return f'Контроллер {self.name} - {self.state}'
+
 
 class SecuritySensor(models.Model):
     name = models.CharField(max_length=255, verbose_name='Извещатель')
@@ -243,6 +250,14 @@ class SecuritySensor(models.Model):
     message_alarm = models.CharField(max_length=200, null=True, help_text='Сигнальная информация')
     state = models.BooleanField(null=True, default=0, verbose_name='Состояние')
     link = models.ForeignKey(Link, on_delete=models.CASCADE, help_text='Ссылка на объект')
+    toggle = models.BooleanField(null=True, default=0, verbose_name='Взведение')
+
+    class Meta:
+        verbose_name = 'Модуль'
+        verbose_name_plural = 'Охранная система'
+
+    def __str__(self):
+        return f'Извещатель {self.name} ({self.topic}) - Состояние:{self.state} взведение:{self.toggle}'
 
 
 class FireSecuritySystem(models.Model):
@@ -253,3 +268,11 @@ class FireSecuritySystem(models.Model):
     message_alarm = models.CharField(max_length=200, null=True, help_text='Сигнальная информация')
     state = models.BooleanField(null=True, default=0, verbose_name='Состояние')
     link = models.ForeignKey(Link, on_delete=models.CASCADE, help_text='Ссылка на объект')
+    toggle = models.BooleanField(null=True, default=0, verbose_name='Взведение')
+
+    class Meta:
+        verbose_name = 'Модуль'
+        verbose_name_plural = 'Пожарная система'
+
+    def __str__(self):
+        return f'Извещатель {self.name} ({self.topic}) - Состояние:{self.state} взведение:{self.toggle}'

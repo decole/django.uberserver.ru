@@ -1,11 +1,8 @@
 from django.core.management.base import BaseCommand, CommandError
 
-from uberserver.helpers.mqtt_helper import security_analise
-from uberserver.models import SecuritySensor
+from uberserver.helpers.mqtt_helper import fire_analise
 from uberserver_django.settings import env
 import paho.mqtt.client as mqtt
-import requests
-import json
 # https://github.com/eclipse/paho.mqtt.python/blob/master/examples/client_sub-class.py
 
 
@@ -15,7 +12,7 @@ class MicroMQTTClass(mqtt.Client):
         print('connected')
 
     def on_message(self, mqttc, obj, msg):
-        security_analise(msg)
+        fire_analise(msg)
 
     def on_publish(self, mqttc, obj, mid):
         print("publishing: "+str(mid))
@@ -27,6 +24,7 @@ class MicroMQTTClass(mqtt.Client):
         self.connect(env('MQTT_IP'), env.int('MQTT_PORT'), 60)
         # Todo подписатся на пожарные топики
         # Todo в дальнейшем функционал внедрить в основной процесс считывания топиков
+
         self.subscribe("#", 0)
 
         rc = 0

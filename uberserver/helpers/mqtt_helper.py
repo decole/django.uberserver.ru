@@ -17,7 +17,7 @@ from paho.mqtt.publish import single
 from uberserver.helpers.notify_helper import notify, send_notify
 from uberserver.helpers.telegram_helper import send_telegram_message
 from uberserver_django.settings import env
-from uberserver.models import Sensor, Swift, MqttPayload
+from uberserver.models import Sensor, Swift, MqttPayload, SecuritySensor, FireSecuritySystem
 
 
 def analise(res):
@@ -57,6 +57,7 @@ def analise(res):
             # проверка с состоянием на контрольной точке
             check_swift_state(res)
     cache.set(res['topic'], res['payload'], 60)
+    # Todo после тестов охранной и пожарной системы, закрепить их сюда
 
 
 def reset_cache():
@@ -125,6 +126,16 @@ def refresh_config_sensors():
     cache.set('mqtt_list_sensors', sensors_list)
 
 
+def refresh_config_security():
+    security = SecuritySensor.objects.all().values()
+    cache.set('mqtt_list_security', security)
+
+
+def refresh_config_fire_system():
+    fire_system = FireSecuritySystem.objects.all().values()
+    cache.set('mqtt_list_fire_system', fire_system)
+
+
 def translate_swift_payload(payload):
     if payload == 'on':
         payload = 1
@@ -141,3 +152,49 @@ def post_payload(topic, payload):
     single(topic, payload=payload, qos=0, retain=False, hostname=env('MQTT_IP'),
            port=env.int('MQTT_PORT'), client_id="SITE", keepalive=60, will=None, auth=None, tls=None, transport="tcp")
     return True
+
+
+def is_chenged(topic, payload, type_sensor):
+    pass
+
+
+def security_analise(payload):
+    """
+    проверить есть ли в кеше параметр системы безопасности и топики безопасности
+    забрать состояние взведения и отслеживать состояние взведения
+    забираем параметры и производим анализ топиков
+    сравниваем состояние
+    сравнивая со статусом взведения, реагировать
+    """
+    # мониторим состояние взведения и на лету меняем его состояние
+    if payload['topic'] == 'test/sec_toggle':
+        print('команда системе безопасности - ' + payload['payload'].decode())
+        # Todo записать в кэш состояние взведения и после сделать обновление кэша охранных топиков
+        refresh_config_security()
+
+    if not cache.get('mqtt_list_security'):
+        refresh_config_security()
+
+    security_list_cache = cache.get('mqtt_list_security')
+    for sensor in security_list_cache:
+        if sensor['topic'] == payload['topic'] and sensor['toggle']:
+            print('moving is detected')
+            # Todo сохранить текущее состояние детекции,
+
+            if is_chenged(sensor['topic'], payload['payload'], 'security'):
+                # Todo при изменении сохранить в нотификации сайт, тг.бот, почта,
+                # и сохранить в истории сенсоров
+                refresh_config_security()
+
+
+def fire_analise(payload):
+    if not cache.get('mqtt_list_fire_system'):
+        refresh_config_fire_system()
+
+    fire_system_list_cache = cache.get('mqtt_list_fire_system')
+    for sensor in fire_system_list_cache:
+        if sensor['topic'] == payload['topic'] and int(payload['payload']) == 1:
+            print('fire is detected')
+            # Todo при изменении сохранить в нотификации сайт, тг.бот, почта,
+            # и сохранить в истории сенсоров
+            pass

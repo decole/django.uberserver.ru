@@ -19,7 +19,7 @@ def index(request):
 def sensors(request):
     if request.user.is_authenticated:
         sensor_list = Sensor.objects.all()
-        model = {'title': 'Sensors', 'type_object': 'sensor', 'sensor_list': sensor_list}
+        model = {'title': 'Сенсоры дома', 'type_object': 'sensor', 'sensor_list': sensor_list}
         return render(request, 'pages/main_pages/sensors.html', model)
     else:
         return redirect('login')
