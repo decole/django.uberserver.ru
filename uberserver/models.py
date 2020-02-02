@@ -218,7 +218,7 @@ class SmartHomeSystemObject(models.Model):
 
     class Meta:
         verbose_name = 'Модуль системы'
-        verbose_name_plural = 'Моули умного дома'
+        verbose_name_plural = 'Модули умного дома'
 
     def __str__(self):
         return f'Система {self.name} {self.type} - {self.state} {self.state}'

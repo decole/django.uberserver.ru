@@ -15,7 +15,7 @@ class MicroMQTTClass(mqtt.Client):
         print('connected')
 
     def on_message(self, mqttc, obj, msg):
-        security_analise(msg)
+        security_analise(json.dumps({"topic": msg.topic, "payload": msg.payload.decode()}))
 
     def on_publish(self, mqttc, obj, mid):
         print("publishing: "+str(mid))
