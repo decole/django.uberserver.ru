@@ -189,6 +189,8 @@ def security_analise(payload):
     for sensor in security_list_cache:
         if payload['topic'] == str(payload['topic']):  # and sensor['toggle']:
             print(sensor['topic'] + ' is find, sensor toggle - ' + str(sensor['toggle']))
+            if str(sensor['toggle']) == 'True':
+                print(str(sensor['message_alarm']).format(value=sensor['name']))
             # if cache.get('security_cocking') is None:
             #     cache.set('security_cocking', 0, None)
             # Todo сохранить текущее состояние детекции,
@@ -196,7 +198,7 @@ def security_analise(payload):
             # Todo при изменении сохранить в нотификации сайт, тг.бот, почта,
             # и сохранить в истории сенсоров
             # refresh_config_security()
-    print('--')
+    print(str(datetime.now())[:19])
 
 
 def fire_analise(payload):
