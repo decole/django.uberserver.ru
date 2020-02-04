@@ -156,8 +156,18 @@ def post_payload(topic, payload):
     return True
 
 
-def is_chenged(topic, payload, type_sensor):
-    pass
+def is_changed(sensor, payload, type_sensor):  # is_chenged(sensor['topic'], payload['payload'], 'security')
+    if type_sensor == 'security':
+        notify(['site', 'telegram', 'email'], 'Охранная система - ' + str(sensor['message_alarm'])
+               .format(value=sensor['name']) + ' ' + str(datetime.now())[:19])
+        #
+        secure_topic = SecuritySensor.objects.get(topic=sensor['topic'])
+        print('in BD state: ' + str(secure_topic.toggle))
+        # print('in MQTT state: ' + payload['payload'])
+        # if secure_topic['state'] != payload['payload']:
+        #     return True
+        # if secure_topic['state'] == payload['payload']:
+        #     return False
 
 
 def change_cocking_state(state):
@@ -188,27 +198,25 @@ def security_analise(payload):
     security_list_cache = cache.get('mqtt_list_security')
     for sensor in security_list_cache:
         if payload['topic'] == str(payload['topic']):  # and sensor['toggle']:
-            print(sensor['topic'] + ' is find, sensor toggle - ' + str(sensor['toggle']))
-            if str(sensor['toggle']) == 'True':
+            if str(sensor['toggle']) == 'True' and int(payload['payload']) == 0:
                 print(str(sensor['message_alarm']).format(value=sensor['name']))
-            # if cache.get('security_cocking') is None:
-            #     cache.set('security_cocking', 0, None)
-            # Todo сохранить текущее состояние детекции,
-            # if is_chenged(sensor['topic'], payload['payload'], 'security'):
+                is_changed(sensor, payload, 'security')
             # Todo при изменении сохранить в нотификации сайт, тг.бот, почта,
             # и сохранить в истории сенсоров
             # refresh_config_security()
-    print(str(datetime.now())[:19])
+                print(str(datetime.now())[:19])
 
 
-def fire_analise(payload):
-    if not cache.get('mqtt_list_fire_system'):
-        refresh_config_fire_system()
-
-    fire_system_list_cache = cache.get('mqtt_list_fire_system')
-    for sensor in fire_system_list_cache:
-        if sensor['topic'] == payload['topic'] and int(payload['payload']) == 1:
-            print('fire is detected')
-            # Todo при изменении сохранить в нотификации сайт, тг.бот, почта,
-            # и сохранить в истории сенсоров
-            pass
+# def fire_analise(payload):
+#     if not cache.get('mqtt_list_fire_system'):
+#         refresh_config_fire_system()
+#
+#     fire_system_list_cache = cache.get('mqtt_list_fire_system')
+#     for sensor in fire_system_list_cache:
+#         if sensor['topic'] == payload['topic']:
+#             str(int(payload['payload']))
+#                 # and int(payload['payload']) == 1:
+#             print('fire is detected')
+#             # Todo при изменении сохранить в нотификации сайт, тг.бот, почта,
+#             # и сохранить в истории сенсоров
+#             pass
