@@ -158,16 +158,24 @@ def post_payload(topic, payload):
 
 def is_changed(sensor, payload, type_sensor):  # is_chenged(sensor['topic'], payload['payload'], 'security')
     if type_sensor == 'security':
-        notify(['site', 'telegram', 'email'], 'Охранная система - ' + str(sensor['message_alarm'])
-               .format(value=sensor['name']) + ' ' + str(datetime.now())[:19])
-        #
         secure_topic = SecuritySensor.objects.get(topic=sensor['topic'])
-        print('in BD state: ' + str(secure_topic.toggle))
-        # print('in MQTT state: ' + payload['payload'])
-        # if secure_topic['state'] != payload['payload']:
-        #     return True
-        # if secure_topic['state'] == payload['payload']:
-        #     return False
+        if int(transcript_state(secure_topic.state)) != int(payload['payload']):
+            secure_topic.state = bool(transcript_state(int(payload['payload'])))
+            secure_topic.save()
+            return True
+        if int(transcript_state(secure_topic.state)) == int(payload['payload']):
+            return False
+
+
+def transcript_state(state):
+    if str(state) == 'True':
+        return 1
+    if str(state) == 'False':
+        return 0
+    if int(state) == 1:
+        return True
+    if int(state) == 0:
+        return False
 
 
 def change_cocking_state(state):
@@ -197,14 +205,10 @@ def security_analise(payload):
 
     security_list_cache = cache.get('mqtt_list_security')
     for sensor in security_list_cache:
-        if payload['topic'] == str(payload['topic']):  # and sensor['toggle']:
-            if str(sensor['toggle']) == 'True' and int(payload['payload']) == 0:
-                print(str(sensor['message_alarm']).format(value=sensor['name']))
-                is_changed(sensor, payload, 'security')
-            # Todo при изменении сохранить в нотификации сайт, тг.бот, почта,
-            # и сохранить в истории сенсоров
-            # refresh_config_security()
-                print(str(datetime.now())[:19])
+        if payload['topic'] == str(payload['topic']) and bool(sensor['toggle']) is True and int(payload['payload'])==1:
+            if is_changed(sensor, payload, 'security'):
+                notify(['site', 'telegram', 'email'], str(sensor['message_alarm']).format(value=sensor['name']) +
+                       str(datetime.now())[:19])
 
 
 # def fire_analise(payload):
