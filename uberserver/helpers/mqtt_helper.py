@@ -187,7 +187,7 @@ def security_analise(payload):
     refresh_config_security()  # убрать - для тестов
 
     # мониторим состояние взведения и на лету меняем его состояние
-    if payload['topic'] == 'home/security/cocking':
+    if payload['topic'] == 'home/security/cocking-test':
         if payload['payload'].decode() == 1:
             cache.set('security_cocking', 1, None)  # cache forever
             change_cocking_state(True)
@@ -205,7 +205,8 @@ def security_analise(payload):
 
     security_list_cache = cache.get('mqtt_list_security')
     for sensor in security_list_cache:
-        if payload['topic'] == str(payload['topic']) and bool(sensor['toggle']) is True and int(payload['payload'])==1:
+        if payload['topic'] == str(payload['topic']) and bool(sensor['toggle']) is True \
+                and int(payload['payload']) == 1:
             if is_changed(sensor, payload, 'security'):
                 notify(['site', 'telegram', 'email'], str(sensor['message_alarm']).format(value=sensor['name']) +
                        str(datetime.now())[:19])
