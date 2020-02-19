@@ -119,12 +119,12 @@ def check_swift_state(res):
 
 def refresh_config_swifts():
     swifts_list = Swift.objects.filter(type__type_name='swift').values()
-    cache.set('mqtt_list_swifts', swifts_list)
+    cache.set('mqtt_list_swifts', swifts_list, 3600)
 
 
 def refresh_config_sensors():
     sensors_list = Sensor.objects.filter(type__type_name='sensor').values()
-    cache.set('mqtt_list_sensors', sensors_list)
+    cache.set('mqtt_list_sensors', sensors_list, 3600)
 
 
 def refresh_config_security():
@@ -156,7 +156,7 @@ def post_payload(topic, payload):
     return True
 
 
-def is_changed(sensor, payload, type_sensor):  # is_chenged(sensor['topic'], payload['payload'], 'security')
+def is_changed(sensor, payload, type_sensor):  # is_changed(sensor['topic'], payload['payload'], 'security')
     if type_sensor == 'security':
         secure_topic = SecuritySensor.objects.get(topic=sensor['topic'])
         if int(transcript_state(secure_topic.state)) != int(payload['payload']):
@@ -179,35 +179,35 @@ def transcript_state(state):
 
 
 def change_cocking_state(state):
-    pass
+    cache.set('security_cocking', int(state), None)  # cache forever
+    secure_topics = SecuritySensor.objects.all()
+    for secsensor in secure_topics:
+        secsensor.toggle = state
+        secsensor.save()
 
 
 def security_analise(payload):
     payload = json.loads(payload)  # убрать - для тестов
     refresh_config_security()  # убрать - для тестов
-
     # мониторим состояние взведения и на лету меняем его состояние
-    if payload['topic'] == 'home/security/cocking-test':
-        if payload['payload'].decode() == 1:
-            cache.set('security_cocking', 1, None)  # cache forever
+    if payload['topic'] == 'home/security/cocking':
+        print(payload['payload'])
+        if int(payload['payload']) is 1:
             change_cocking_state(True)
-            print('команда системе безопасности - активация')
-        if payload['payload'].decode() == 0:
+        if int(payload['payload']) is 0:
             cache.set('security_cocking', 0, None)  # cache forever
             change_cocking_state(False)
-            print('команда системе безопасности - деактивация')
-
-        # Todo записать в кэш состояние взведения и после сделать обновление кэша охранных топиков
         refresh_config_security()
 
     if not cache.get('mqtt_list_security'):
         refresh_config_security()
-
     security_list_cache = cache.get('mqtt_list_security')
     for sensor in security_list_cache:
         if payload['topic'] == str(payload['topic']) and bool(sensor['toggle']) is True \
                 and int(payload['payload']) == 1:
-            if is_changed(sensor, payload, 'security'):
+            is_changed(sensor['topic'], payload['payload'], 'security')
+            if int(get_payload('security_cocking')) is 1:
+                print('add notify')
                 notify(['site', 'telegram', 'email'], str(sensor['message_alarm']).format(value=sensor['name']) +
                        str(datetime.now())[:19])
 

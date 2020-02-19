@@ -90,14 +90,14 @@ def lamp_on(update, context):
     topic = 'margulis/lamp01'
     payload = 'on'
     post_payload(topic, payload)
-    update.message.reply_text('Дампа включена')
+    update.message.reply_text('Лампа включена')
 
 
 def lamp_off(update, context):
     topic = 'margulis/lamp01'
     payload = 'off'
     post_payload(topic, payload)
-    update.message.reply_text('Дампа выключена')
+    update.message.reply_text('Лампа выключена')
 
 
 def weather(update, context):
